@@ -93,12 +93,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Bluetoothがサポートされているか確認
         if (bluetoothAdapter == null) {
+            Log.d("BLE_DBG", "Bluetooth was not supported in on device.");
             Toast.makeText(this, "Bluetoothがサポートされていません", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Bluetoothが有効か確認
         if (!bluetoothAdapter.isEnabled()) {
+            Log.d("BLE_DBG","please activate bluetooth");
             Toast.makeText(this, "Bluetoothを有効にしてください", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         // デバイスがBluetooth LE Advertiserをサポートしているか確認
         if (advertiser == null) {
+            Log.d("BLD_DBG","BLE Advertising is not supported on this device.");
             Toast.makeText(this, "このデバイスはBluetooth LE Advertiseをサポートしていません", Toast.LENGTH_SHORT).show();
             return;
         }
