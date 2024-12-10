@@ -10,6 +10,7 @@ import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -50,6 +51,39 @@ public class MainActivity extends AppCompatActivity {
         } else {
             initializeBluetooth();
         }
+
+        // ボタンを押した時の動作を定義する
+        // ボタンを押したらeditTextに入力された文字列をアドバタイズする
+        findViewById(R.id.button1).setOnClickListener(v -> {
+            // editTextを取得する
+            EditText editText = findViewById(R.id.data);
+            // 文字を抜き出す
+            String data = editText.getText().toString();
+
+            // アドバタイズデータを作成する
+            AdvertiseData advertiseData = new AdvertiseData.Builder()
+                    .setIncludeDeviceName(true)
+                    .addManufacturerData(100, data.getBytes())
+                    .build();
+
+            // アドバタイズデータをControllerにセットする
+            advertiseController.setAdvertiseData(advertiseData);
+
+            // アドバタイズを再起動
+            // 今のアドバタイズを停止
+            advertiseController.stopAdvertising();
+
+            // 新しいアドバタイズを開始
+            boolean res = advertiseController.startAdvertising();
+
+            if (res) {
+                Log.i("BLE_DBG", "update advertise data: " + data);
+                Toast.makeText(this, data + " をセットしました", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e("BLE_DBG", "failed to update advertise data: " + data);
+                Toast.makeText(this, "データを更新できませんでした。", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // パーミッションチェック
