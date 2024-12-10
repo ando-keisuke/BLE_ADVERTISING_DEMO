@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityResultLauncher<String[]> permissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 result -> {
-                    for (int i = 0; i <= result.size();i++){
+                    for (int i = 0; i < result.size();i++){
                         Log.d("BLE_PERM",REQUIRED_PERMISSIONS[i] + " : " + result.get(REQUIRED_PERMISSIONS[i]));
                     }
                     boolean allGranted = true;
