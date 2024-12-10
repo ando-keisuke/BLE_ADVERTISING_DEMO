@@ -1,0 +1,4 @@
+BLEのアドバタイズをするプロトタイプ
+
+初期設定のプロジェクトから、AndroidManifestとMainActivity.javaしかいじってないです
+
