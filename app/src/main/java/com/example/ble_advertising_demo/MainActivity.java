@@ -21,6 +21,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    private BLEAdvertiseController advertiseController;
 
     // 必要なパーミッションリスト
     String[] REQUIRED_PERMISSIONS = {
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        BLEAdvertiseController advertiseController = new BLEAdvertiseController(this, advertiser);
+        advertiseController = new BLEAdvertiseController(this, advertiser);
 
         advertiseController.setAdvertiseData(new AdvertiseData.Builder()
                 .setIncludeDeviceName(true)
