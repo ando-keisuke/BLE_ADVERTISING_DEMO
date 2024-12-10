@@ -1,4 +1,3 @@
 BLEのアドバタイズをするプロトタイプ
 
-初期設定のプロジェクトから、AndroidManifestとMainActivity.javaしかいじってないです
-
+初期設定のプロジェクトから、AndroidManifestとMainActivity.java、あとBLEAdvertiseControllerしかいじっていないです
