@@ -114,68 +114,20 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        startAdvertising(advertiser);
-    }
+        BLEAdvertiseController advertiseController = new BLEAdvertiseController(this, advertiser);
 
-    // アドバタイズの開始
-    private void startAdvertising(BluetoothLeAdvertiser advertiser) {
-        AdvertiseSettings settings = new AdvertiseSettings.Builder()
-                .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-                .setConnectable(true)
-                .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-                .build();
-
-        byte[] helloWorldBytes = {72, 69, 76, 76, 79, 32, 87, 79, 82, 76, 68};  // 'HELLO WORLD' のバイト列
-
-
-        AdvertiseData data = new AdvertiseData.Builder()
+        advertiseController.setAdvertiseData(new AdvertiseData.Builder()
                 .setIncludeDeviceName(true)
-                .addManufacturerData(100,helloWorldBytes)
-                .build();
+                .addManufacturerData(100, "good morning!".getBytes())
+                .build());
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        advertiser.startAdvertising(settings, data, new AdvertiseCallback() {
-            @Override
-            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                Log.d("BLE-DBG", "start advertising!");
-                Toast.makeText(MainActivity.this, "アドバタイズ開始", Toast.LENGTH_SHORT).show();
-            }
+        boolean res = advertiseController.startAdvertising();
 
-            @Override
-            public void onStartFailure(int errorCode) {
-                Log.d("BLE-DBG", "ERROR CODE: " + errorCode);
-                String errorMessage;
-                switch (errorCode) {
-                    case AdvertiseCallback.ADVERTISE_FAILED_DATA_TOO_LARGE:
-                        errorMessage = "データが大きすぎます";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_TOO_MANY_ADVERTISERS:
-                        errorMessage = "アドバタイズスロットが不足しています";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_ALREADY_STARTED:
-                        errorMessage = "すでにアドバタイズが開始されています";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_INTERNAL_ERROR:
-                        errorMessage = "内部エラーが発生しました";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_FEATURE_UNSUPPORTED:
-                        errorMessage = "機能がサポートされていません";
-                        break;
-                    default:
-                        errorMessage = "未知のエラー";
-                        break;
-                }
-                Toast.makeText(MainActivity.this, "アドバタイズ失敗: " + errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
+         if (res) {
+             Toast.makeText(this, "Advertising started", Toast.LENGTH_SHORT).show();
+         } else {
+                Toast.makeText(this, "Advertising start failed", Toast.LENGTH_SHORT).show();
+         }
     }
+
 }
