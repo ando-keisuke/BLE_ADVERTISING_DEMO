@@ -25,11 +25,6 @@ public class BLEAdvertiseController {
     BLEAdvertiseController(Context context,BluetoothLeAdvertiser advertiser) {
         this.context = context;
         this.advertiser = advertiser;
-
-        // 初期値を設定
-        this.initializeAdvertiseData();
-        this.initializeAdvertiseSetting();
-        this.initializeAdvertiseCallback();
     }
 
     // コンストラクタ
@@ -73,62 +68,6 @@ public class BLEAdvertiseController {
             }
             advertiser.stopAdvertising(advertiseCallback);
         }
-    }
-
-    // こっから下は初期設定をするメソッド冗長だから消すかもしれない
-    // 読まなくてもいい
-    // ------------------------------
-
-    // 初期値を設定するメソッド
-    private void initializeAdvertiseData() {
-        // Hello world! という文字列を送信する
-        this.advertiseData = new AdvertiseData.Builder()
-                .setIncludeDeviceName(true)
-                .addManufacturerData(100, "Hello world!".getBytes())
-                .build();
-    }
-
-    private void initializeAdvertiseSetting() {
-        this.AdvertiseSettings = new AdvertiseSettings.Builder()
-                .setAdvertiseMode(android.bluetooth.le.AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-                .setConnectable(true)
-                .setTxPowerLevel(android.bluetooth.le.AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-                .build();
-    }
-
-    private void initializeAdvertiseCallback() {
-        this.advertiseCallback = new AdvertiseCallback() {
-            @Override
-            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                Log.i("BLE-DBG", "Controller: start advertising!");
-            }
-
-            @Override
-            public void onStartFailure(int errorCode) {
-                String errorMessage;
-                switch (errorCode) {
-                    case AdvertiseCallback.ADVERTISE_FAILED_DATA_TOO_LARGE:
-                        errorMessage = "callback: Data is too large";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_TOO_MANY_ADVERTISERS:
-                        errorMessage = "callback: Too many advertisers";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_ALREADY_STARTED:
-                        errorMessage = "callback: Already started";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_INTERNAL_ERROR:
-                        errorMessage = "callback: Internal error";
-                        break;
-                    case AdvertiseCallback.ADVERTISE_FAILED_FEATURE_UNSUPPORTED:
-                        errorMessage = "callback: Feature unsupported";
-                        break;
-                    default:
-                        errorMessage = "callback: Unknown error";
-                        break;
-                }
-                Log.e("BLE-DBG", "Controller: CODE: " + errorCode + "MSG: " + errorMessage);
-            }
-        };
     }
 
 }

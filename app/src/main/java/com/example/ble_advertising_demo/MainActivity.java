@@ -151,10 +151,49 @@ public class MainActivity extends AppCompatActivity {
         if (advertiseController == null) {
             advertiseController = new BLEAdvertiseController(this, advertiser);
 
+            advertiseController.setAdvertiseData( new AdvertiseData.Builder()
+                    .setIncludeDeviceName(true)
+                    .addManufacturerData(100, "Hello world!".getBytes())
+                    .build());
+
             advertiseController.setAdvertiseData(new AdvertiseData.Builder()
                     .setIncludeDeviceName(true)
                     .addManufacturerData(100, "this is initial value!".getBytes())
                     .build());
+
+            advertiseController.setAdvertiseCallback(new AdvertiseCallback() {
+                @Override
+                public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+                    Log.i("BLE-DBG", "Controller: start advertising!");
+                }
+
+                @Override
+                public void onStartFailure(int errorCode) {
+                    String errorMessage;
+                    switch (errorCode) {
+                        case AdvertiseCallback.ADVERTISE_FAILED_DATA_TOO_LARGE:
+                            errorMessage = "callback: Data is too large";
+                            break;
+                        case AdvertiseCallback.ADVERTISE_FAILED_TOO_MANY_ADVERTISERS:
+                            errorMessage = "callback: Too many advertisers";
+                            break;
+                        case AdvertiseCallback.ADVERTISE_FAILED_ALREADY_STARTED:
+                            errorMessage = "callback: Already started";
+                            break;
+                        case AdvertiseCallback.ADVERTISE_FAILED_INTERNAL_ERROR:
+                            errorMessage = "callback: Internal error";
+                            break;
+                        case AdvertiseCallback.ADVERTISE_FAILED_FEATURE_UNSUPPORTED:
+                            errorMessage = "callback: Feature unsupported";
+                            break;
+                        default:
+                            errorMessage = "callback: Unknown error";
+                            break;
+                    }
+                    Log.e("BLE-DBG", "Controller: CODE: " + errorCode + "MSG: " + errorMessage);
+                }
+            });
         }
+
     }
 }
