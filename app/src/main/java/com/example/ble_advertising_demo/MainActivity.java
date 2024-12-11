@@ -66,6 +66,15 @@ public class MainActivity extends AppCompatActivity {
                     .addManufacturerData(100, data.getBytes())
                     .build();
 
+            // アドバタイズコントローラが初期化されているかチェックする
+            if (advertiseController == null) {
+                initializeBluetooth();
+            }
+            // 初期化が成功したかチェック
+            if (advertiseController == null) {
+                Toast.makeText(this,"コントローラの初期化に失敗しました",Toast.LENGTH_SHORT).show();
+            }
+
             // アドバタイズデータをControllerにセットする
             advertiseController.setAdvertiseData(advertiseData);
 
@@ -148,32 +157,44 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (advertiseController == null) {
-            advertiseController = new BLEAdvertiseController(this, advertiser);
+        // コントローラが既に初期化されている場合は何もしない
+        if (advertiseController != null) {
+            Log.d("BLE_DBG","BLEAdvertiseController was already initialized!");
+            return;
+        };
 
-            advertiseController.setAdvertiseData( new AdvertiseData.Builder()
-                    .setIncludeDeviceName(true)
-                    .addManufacturerData(100, "Hello world!".getBytes())
-                    .build());
+        // コントローラを作成する
+        advertiseController = new BLEAdvertiseController(this, advertiser);
 
-            advertiseController.setAdvertiseData(new AdvertiseData.Builder()
-                    .setIncludeDeviceName(true)
-                    .addManufacturerData(100, "this is initial value!".getBytes())
-                    .build());
+        // コントローラに初期値を設定する
+        // AdvertiseSetting
+        // AdvertiseData
+        // AdvertiseCallback
+        // この三つが必要
+        advertiseController.setAdvertiseSettings(new AdvertiseSettings.Builder()
+                .setAdvertiseMode(android.bluetooth.le.AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
+                .setConnectable(true)
+                .setTxPowerLevel(android.bluetooth.le.AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+                .build());
 
-            advertiseController.setAdvertiseCallback(new AdvertiseCallback() {
-                @Override
-                public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                    Log.i("BLE-DBG", "Controller: start advertising!");
-                }
+        advertiseController.setAdvertiseData(new AdvertiseData.Builder()
+                .setIncludeDeviceName(true)
+                .addManufacturerData(100, "this is initial value!".getBytes())
+                .build());
 
-                @Override
-                public void onStartFailure(int errorCode) {
-                    String errorMessage;
-                    switch (errorCode) {
-                        case AdvertiseCallback.ADVERTISE_FAILED_DATA_TOO_LARGE:
-                            errorMessage = "callback: Data is too large";
-                            break;
+        advertiseController.setAdvertiseCallback(new AdvertiseCallback() {
+            @Override
+            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+                Log.i("BLE-DBG", "Controller: start advertising!");
+            }
+
+            @Override
+            public void onStartFailure(int errorCode) {
+                String errorMessage;
+                switch (errorCode) {
+                    case AdvertiseCallback.ADVERTISE_FAILED_DATA_TOO_LARGE:
+                        errorMessage = "callback: Data is too large";
+                        break;
                         case AdvertiseCallback.ADVERTISE_FAILED_TOO_MANY_ADVERTISERS:
                             errorMessage = "callback: Too many advertisers";
                             break;
@@ -191,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     Log.e("BLE-DBG", "Controller: CODE: " + errorCode + "MSG: " + errorMessage);
-                }
-            });
-        }
-
+            }
+        });
     }
+
 }
+
