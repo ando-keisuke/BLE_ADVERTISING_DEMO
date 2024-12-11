@@ -148,11 +148,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        advertiseController = new BLEAdvertiseController(this, advertiser);
+        if (advertiseController == null) {
+            advertiseController = new BLEAdvertiseController(this, advertiser);
 
-        advertiseController.setAdvertiseData(new AdvertiseData.Builder()
-                .setIncludeDeviceName(true)
-                .addManufacturerData(100, "this is initial value!".getBytes())
-                .build());
+            advertiseController.setAdvertiseData(new AdvertiseData.Builder()
+                    .setIncludeDeviceName(true)
+                    .addManufacturerData(100, "this is initial value!".getBytes())
+                    .build());
+        }
     }
 }
