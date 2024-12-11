@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Bluetoothが有効か確認
         if (!bluetoothAdapter.isEnabled()) {
-            Log.d("BLE_DBG","please activate bluetooth");
+            Log.d("BLE_DBG", "please activate bluetooth");
             Toast.makeText(this, "Bluetoothを有効にしてください", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         // デバイスがBluetooth LE Advertiserをサポートしているか確認
         if (advertiser == null) {
-            Log.d("BLD_DBG","BLE Advertising is not supported on this device.");
+            Log.d("BLD_DBG", "BLE Advertising is not supported on this device.");
             Toast.makeText(this, "このデバイスはBluetooth LE Advertiseをサポートしていません", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -152,16 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         advertiseController.setAdvertiseData(new AdvertiseData.Builder()
                 .setIncludeDeviceName(true)
-                .addManufacturerData(100, "good morning!".getBytes())
+                .addManufacturerData(100, "this is initial value!".getBytes())
                 .build());
-
-        boolean res = advertiseController.startAdvertising();
-
-         if (res) {
-             Toast.makeText(this, "Advertising started", Toast.LENGTH_SHORT).show();
-         } else {
-                Toast.makeText(this, "Advertising start failed", Toast.LENGTH_SHORT).show();
-         }
     }
-
 }
