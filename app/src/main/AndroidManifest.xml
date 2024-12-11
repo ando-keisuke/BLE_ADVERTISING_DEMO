@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!-- Android 12 以上で必要 -->
+    <!-- Android 12以下では必要ないのでrequiredをfalseに設定 -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:required="false" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:required="false" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:required="false"/>
